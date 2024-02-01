@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TAM 100
+
+typedef struct {
+    int elementos[MAX_TAM];
+    int tamanho;
+} Lista;
+
+
+void inicializarLista(Lista *lista) {
+    lista->tamanho = 0;
+}
+
+
+void inserirElemento(Lista *lista, int elemento) {
+    if (lista->tamanho < MAX_TAM) {
+        lista->elementos[lista->tamanho] = elemento;
+        lista->tamanho++;
+    } else {
+        printf("Erro: Lista cheia.\n");
+    }
+}
+
+
+void imprimirLista(Lista *lista) {
+    printf("Lista: ");
+    for (int i = 0; i < lista->tamanho; i++) {
+        printf("%d ", lista->elementos[i]);
+    }
+    printf("\n");
+}
+
+
+void concatenarListas(Lista *lista1, Lista *lista2) {
+    if (lista1->tamanho + lista2->tamanho <= MAX_TAM) {
+        for (int i = 0; i < lista2->tamanho; i++) {
+            lista1->elementos[lista1->tamanho + i] = lista2->elementos[i];
+        }
+        lista1->tamanho += lista2->tamanho;
+    } else {
+        printf("Erro: Concatenação ultrapassa o tamanho máximo da lista.\n");
+    }
+}
+
+
+void dividirLista(Lista *lista, int posicao, Lista *lista1, Lista *lista2) {
+    if (posicao >= 0 && posicao <= lista->tamanho) {
+        for (int i = 0; i < posicao; i++) {
+            lista1->elementos[i] = lista->elementos[i];
+            lista1->tamanho++;
+        }
+
+        for (int i = posicao; i < lista->tamanho; i++) {
+            lista2->elementos[i - posicao] = lista->elementos[i];
+            lista2->tamanho++;
+        }
+    } else {
+        printf("Erro: Posição inválida para divisão.\n");
+    }
+}
+
+
+void copiarLista(Lista *origem, Lista *destino) {
+    if (origem->tamanho <= MAX_TAM) {
+        for (int i = 0; i < origem->tamanho; i++) {
+            destino->elementos[i] = origem->elementos[i];
+        }
+        destino->tamanho = origem->tamanho;
+    } else {
+        printf("Erro: Lista de origem excede o tamanho máximo da lista de destino.\n");
+    }
+}
+
+
+int pesquisarElemento(Lista *lista, int elemento) {
+    for (int i = 0; i < lista->tamanho; i++) {
+        if (lista->elementos[i] == elemento) {
+            return i; 
+        }
+    }
+    return -1; 
+}
+
+int main() {
+    Lista lista1, lista2, listaConcatenada, listaDividida1, listaDividida2, listaCopia;
+    inicializarLista(&lista1);
+    inicializarLista(&lista2);
+    inicializarLista(&listaConcatenada);
+    inicializarLista(&listaDividida1);
+    inicializarLista(&listaDividida2);
+    inicializarLista(&listaCopia);
+
+    
+    for (int i = 1; i <= 5; i++) {
+        inserirElemento(&lista1, i);
+        inserirElemento(&lista2, i + 5);
+    }
+
+  
+    printf("Listas Originais:\n");
+    imprimirLista(&lista1);
+    imprimirLista(&lista2);
+
+  
+    concatenarListas(&lista1, &lista2);
+    printf("\nLista Concatenada:\n");
+    imprimirLista(&lista1);
+
+   
+    dividirLista(&lista1, 3, &listaDividida1, &listaDividida2);
+    printf("\nListas Divididas:\n");
+    imprimirLista(&listaDividida1);
+    imprimirLista(&listaDividida2);
+
+    copiarLista(&listaDividida1, &listaCopia);
+    printf("\nLista Copiada:\n");
+    imprimirLista(&listaCopia);
+
+   
+    int elementoPesquisado = 4;
+    int posicaoElemento = pesquisarElemento(&listaDividida1, elementoPesquisado);
+    if (posicaoElemento != -1) {
+        printf("\nElemento %d encontrado na posição %d da lista dividida 1.\n", elementoPesquisado, posicaoElemento);
+    } else {
+        printf("\nElemento %d não encontrado na lista dividida 1.\n", elementoPesquisado);
+    }
+
+    return 0;
+}

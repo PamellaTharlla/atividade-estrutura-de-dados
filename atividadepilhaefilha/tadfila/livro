@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct NoFilaEspera {
+    char nomePessoa[100];
+    struct NoFilaEspera *prox;
+} NoFilaEspera;
+
+typedef struct FilaEspera {
+    NoFilaEspera *inicio;
+    NoFilaEspera *fim;
+} FilaEspera;
+
+FilaEspera *criarFilaEspera() {
+    FilaEspera *fila = (FilaEspera *)malloc(sizeof(FilaEspera));
+    fila->inicio = fila->fim = NULL;
+    return fila;
+}
+
+void enfileirar(FilaEspera *fila, char nomePessoa[]) {
+    NoFilaEspera *novoNo = (NoFilaEspera *)malloc(sizeof(NoFilaEspera));
+    strcpy(novoNo->nomePessoa, nomePessoa);
+    novoNo->prox = NULL;
+
+    if (fila->fim == NULL) {
+        fila->inicio = fila->fim = novoNo;
+    } else {
+        fila->fim->prox = novoNo;
+        fila->fim = novoNo;
+    }
+}
+
+void desenfileirar(FilaEspera *fila) {
+    if (fila->inicio != NULL) {
+        NoFilaEspera *temp = fila->inicio;
+        fila->inicio = fila->inicio->prox;
+        free(temp);
+        if (fila->inicio == NULL) {
+            fila->fim = NULL;
+        }
+    }
+}
+
+int filaVazia(FilaEspera *fila) {
+    return fila->inicio == NULL;
+}
+
+typedef struct {
+    char nome[100];
+    int disponibilidade;
+    FilaEspera *filaEspera;
+} Livro;
+
+Livro cadastrarLivro(char nome[]) {
+    Livro novoLivro;
+    strcpy(novoLivro.nome, nome);
+    novoLivro.disponibilidade = 1;
+    novoLivro.filaEspera = criarFilaEspera();
+    return novoLivro;
+}
+
+void requisitarLivro(Livro *livro, char nomePessoa[]) {
+    if (livro->disponibilidade == 1) {
+        livro->disponibilidade = 0;
+        printf("Livro \"%s\" emprestado para %s\n", livro->nome, nomePessoa);
+    } else {
+        printf("Livro \"%s\" indisponível. %s colocado(a) na fila de espera.\n", livro->nome, nomePessoa);
+        enfileirar(livro->filaEspera, nomePessoa);
+    }
+}
+
+void devolverLivro(Livro *livro) {
+    if (!filaVazia(livro->filaEspera)) {
+        NoFilaEspera *primeiroDaFila = livro->filaEspera->inicio;
+        printf("Livro \"%s\" devolvido. Emprestando para %s da fila de espera.\n", livro->nome, primeiroDaFila->nomePessoa);
+        desenfileirar(livro->filaEspera);
+    } else {
+        livro->disponibilidade = 1;
+        printf("Livro \"%s\" devolvido e agora está disponível.\n", livro->nome);
+    }
+}
+
+int main() {
+    Livro pequenoPrincipe = cadastrarLivro("O Pequeno Príncipe");
+    Livro harryPotter = cadastrarLivro("Harry Potter");
+
+    requisitarLivro(&pequenoPrincipe, "João");
+    requisitarLivro(&harryPotter, "Maria");
+
+    devolverLivro(&pequenoPrincipe);
+    requisitarLivro(&pequenoPrincipe, "Pedro");
+
+    devolverLivro(&harryPotter);
+    requisitarLivro(&harryPotter, "Ana");
+
+    free(pequenoPrincipe.filaEspera);
+    free(harryPotter.filaEspera);
+
+    return 0;
+}

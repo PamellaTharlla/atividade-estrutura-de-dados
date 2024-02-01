@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+
+struct Endereco {
+    char nome[50];
+    char rua[100];
+    char bairro[50];
+    char cidade[50];
+    char cep[50];
+};
+
+int main() {
+    struct Endereco agenda[100];  // Corrigido para 'Endereco'
+    int nEndereco = 0;
+
+    strcpy(agenda[nEndereco].nome, "Carla");
+    strcpy(agenda[nEndereco].rua, "Miguel Lidiano");
+    strcpy(agenda[nEndereco].bairro, "Junco");
+    strcpy(agenda[nEndereco].cidade, "Picos");
+    strcpy(agenda[nEndereco].cep, "6460000");
+    nEndereco++;
+
+    printf("Endereço na agenda:\n");
+    for (int i = 0; i < nEndereco; i++) {
+        printf("Nome : %s\n", agenda[i].nome);
+        printf("Rua : %s\n", agenda[i].rua);
+        printf("Bairro: %s\n", agenda[i].bairro);
+        printf("Cidade: %s\n", agenda[i].cidade);
+        printf("Cep : %s\n", agenda[i].cep);
+        printf("\n");
+    }
+
+    return 0;
+}

@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TAM 10
+
+typedef struct {
+    int elementos[MAX_TAM];
+    int topo;
+} Pilha;
+
+Pilha createPilha() {
+    Pilha novaPilha;
+    novaPilha.topo = -1;
+    return novaPilha;
+}
+
+int isEmpty(Pilha *pilha) {
+    return pilha->topo == -1;
+}
+
+int isFull(Pilha *pilha) {
+    return pilha->topo == MAX_TAM - 1;
+}
+
+void push(Pilha *pilha, int elemento) {
+    if (!isFull(pilha)) {
+        pilha->topo++;
+        pilha->elementos[pilha->topo] = elemento;
+        printf("Push: %d\n", elemento);
+    } else {
+        printf("Erro: Pilha cheia, não é possível realizar o push.\n");
+    }
+}
+
+void pop(Pilha *pilha) {
+    if (!isEmpty(pilha)) {
+        printf("Pop: %d\n", pilha->elementos[pilha->topo]);
+        pilha->topo--;
+    } else {
+        printf("Erro: Pilha vazia, não é possível realizar o pop.\n");
+    }
+}
+
+int top(Pilha *pilha) {
+    if (!isEmpty(pilha)) {
+        return pilha->elementos[pilha->topo];
+    } else {
+        printf("Erro: Pilha vazia, não há topo.\n");
+        return -1;
+    }
+}
+
+int areEqual(Pilha *pilha1, Pilha *pilha2) {
+    if (pilha1->topo != pilha2->topo) {
+        return 0;
+    }
+
+    for (int i = 0; i <= pilha1->topo; i++) {
+        if (pilha1->elementos[i] != pilha2->elementos[i]) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+int main() {
+    Pilha minhaPilha1 = createPilha();
+    Pilha minhaPilha2 = createPilha();
+
+    push(&minhaPilha1, 10);
+    push(&minhaPilha1, 20);
+    push(&minhaPilha1, 30);
+
+    push(&minhaPilha2, 10);
+    push(&minhaPilha2, 20);
+    push(&minhaPilha2, 30);
+
+    if (areEqual(&minhaPilha1, &minhaPilha2)) {
+        printf("As pilhas são iguais.\n");
+    } else {
+        printf("As pilhas são diferentes.\n");
+    }
+
+    pop(&minhaPilha2);
+
+    if (areEqual(&minhaPilha1, &minhaPilha2)) {
+        printf("As pilhas são iguais.\n");
+    } else {
+        printf("As pilhas são diferentes.\n");
+    }
+
+    return 0;
+}

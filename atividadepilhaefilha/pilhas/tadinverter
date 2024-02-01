@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TAM 10
+
+typedef struct {
+    int elementos[MAX_TAM];
+    int topo;
+} Pilha;
+
+Pilha createPilha() {
+    Pilha novaPilha;
+    novaPilha.topo = -1;
+    return novaPilha;
+}
+
+int isEmpty(Pilha *pilha) {
+    return pilha->topo == -1;
+}
+
+int isFull(Pilha *pilha) {
+    return pilha->topo == MAX_TAM - 1;
+}
+
+void push(Pilha *pilha, int elemento) {
+    if (!isFull(pilha)) {
+        pilha->topo++;
+        pilha->elementos[pilha->topo] = elemento;
+    }
+}
+
+void pop(Pilha *pilha) {
+    if (!isEmpty(pilha)) {
+        pilha->topo--;
+    }
+}
+
+int top(Pilha *pilha) {
+    if (!isEmpty(pilha)) {
+        return pilha->elementos[pilha->topo];
+    } else {
+        return -1;
+    }
+}
+
+int areEqual(Pilha *pilha1, Pilha *pilha2) {
+    if (pilha1->topo != pilha2->topo) {
+        return 0;
+    }
+
+    for (int i = 0; i <= pilha1->topo; i++) {
+        if (pilha1->elementos[i] != pilha2->elementos[i]) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+void inverterPilha(Pilha *pilha) {
+    int inicio = 0;
+    int fim = pilha->topo;
+
+    while (inicio < fim) {
+        int temp = pilha->elementos[inicio];
+        pilha->elementos[inicio] = pilha->elementos[fim];
+        pilha->elementos[fim] = temp;
+
+        inicio++;
+        fim--;
+    }
+}
+
+int main() {
+    Pilha minhaPilha = createPilha();
+
+    push(&minhaPilha, 10);
+    push(&minhaPilha, 20);
+    push(&minhaPilha, 30);
+
+    printf("Pilha Original:\n");
+    while (!isEmpty(&minhaPilha)) {
+        printf("%d ", top(&minhaPilha));
+        pop(&minhaPilha);
+    }
+    printf("\n");
+
+    push(&minhaPilha, 10);
+    push(&minhaPilha, 20);
+    push(&minhaPilha, 30);
+
+    printf("\nInvertendo a Pilha:\n");
+    inverterPilha(&minhaPilha);
+
+    while (!isEmpty(&minhaPilha)) {
+        printf("%d ", top(&minhaPilha));
+        pop(&minhaPilha);
+    }
+    printf("\n");
+
+    return 0;
+}

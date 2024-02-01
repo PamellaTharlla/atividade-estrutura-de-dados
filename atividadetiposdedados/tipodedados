@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+// Definição do tipo ponto
+typedef struct {
+    float x; 
+    float y; 
+} Ponto;
+
+
+typedef struct {
+    Ponto pontoInicial; 
+    Ponto pontoFinal;   
+} Reta;
+
+
+typedef struct {
+    float coeficienteA; 
+    float coeficienteB; 
+    float coeficienteC; 
+} PolinomioGrau2;
+
+int main() {
+    
+    Ponto pontoA = {1.0, 2.0};
+    printf("Coordenadas do ponto: (%.2f, %.2f)\n", pontoA.x, pontoA.y);
+
+    
+    Reta retaAB = {{1.0, 2.0}, {3.0, 4.0}};
+    printf("Ponto inicial da reta: (%.2f, %.2f)\n", retaAB.pontoInicial.x, retaAB.pontoInicial.y);
+    printf("Ponto final da reta: (%.2f, %.2f)\n", retaAB.pontoFinal.x, retaAB.pontoFinal.y);
+
+    
+    PolinomioGrau2 polinomio = {1.0, -2.0, 1.0}; 
+    printf("Coeficiente A: %.2f\n", polinomio.coeficienteA);
+    printf("Coeficiente B: %.2f\n", polinomio.coeficienteB);
+    printf("Coeficiente C: %.2f\n", polinomio.coeficienteC);
+
+    return 0;
+}

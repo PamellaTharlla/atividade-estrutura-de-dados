@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TAM 10
+
+typedef struct {
+    int elementos[MAX_TAM];
+    int topo;
+} Pilha;
+
+Pilha createPilha() {
+    Pilha novaPilha;
+    novaPilha.topo = -1;
+    return novaPilha;
+}
+
+int isEmpty(Pilha *pilha) {
+    return pilha->topo == -1;
+}
+
+int isFull(Pilha *pilha) {
+    return pilha->topo == MAX_TAM - 1;
+}
+
+void push(Pilha *pilha, int elemento) {
+    if (!isFull(pilha)) {
+        pilha->topo++;
+        pilha->elementos[pilha->topo] = elemento;
+        printf("Push: %d\n", elemento);
+    } else {
+        printf("Erro: Pilha cheia, não é possível realizar o push.\n");
+    }
+}
+
+void pop(Pilha *pilha) {
+    if (!isEmpty(pilha)) {
+        printf("Pop: %d\n", pilha->elementos[pilha->topo]);
+        pilha->topo--;
+    } else {
+        printf("Erro: Pilha vazia, não é possível realizar o pop.\n");
+    }
+}
+
+int top(Pilha *pilha) {
+    if (!isEmpty(pilha)) {
+        return pilha->elementos[pilha->topo];
+    } else {
+        printf("Erro: Pilha vazia, não há topo.\n");
+        return -1; 
+    }
+}
+
+int main() {
+    Pilha minhaPilha = createPilha();
+
+    push(&minhaPilha, 10);
+    push(&minhaPilha, 20);
+    push(&minhaPilha, 30);
+
+    printf("Topo: %d\n", top(&minhaPilha));
+
+    pop(&minhaPilha);
+    pop(&minhaPilha);
+
+    printf("Topo: %d\n", top(&minhaPilha));
+
+    pop(&minhaPilha);
+
+    return 0;
+}

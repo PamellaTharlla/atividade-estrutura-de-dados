@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct {
+    int *elementos; 
+    int tamanho;    
+    int capacidade;  
+} ConjuntoInteiros;
+
+
+ConjuntoInteiros criarConjunto(int capacidade) {
+    ConjuntoInteiros conjunto;
+    conjunto.elementos = (int *)malloc(capacidade * sizeof(int));
+    conjunto.tamanho = 0;
+    conjunto.capacidade = capacidade;
+    return conjunto;
+}
+
+
+int pertence(ConjuntoInteiros conjunto, int elemento) {
+    for (int i = 0; i < conjunto.tamanho; i++) {
+        if (conjunto.elementos[i] == elemento) {
+            return 1; // Pertence ao conjunto
+        }
+    }
+    return 0;
+}
+
+
+void inserir(ConjuntoInteiros *conjunto, int elemento) {
+    if (!pertence(*conjunto, elemento) && conjunto->tamanho < conjunto->capacidade) {
+        conjunto->elementos[conjunto->tamanho] = elemento;
+        conjunto->tamanho++;
+    }
+}
+
+
+void remover(ConjuntoInteiros *conjunto, int elemento) {
+    for (int i = 0; i < conjunto->tamanho; i++) {
+        if (conjunto->elementos[i] == elemento) {
+            
+            conjunto->elementos[i] = conjunto->elementos[conjunto->tamanho - 1];
+            conjunto->tamanho--;
+            return;
+        }
+    }
+}
+
+void imprimir(ConjuntoInteiros conjunto) {
+    printf("{ ");
+    for (int i = 0; i < conjunto.tamanho; i++) {
+        printf("%d ", conjunto.elementos[i]);
+    }
+    printf("}\n");
+}
+
+
+void liberarConjunto(ConjuntoInteiros *conjunto) {
+    free(conjunto->elementos);
+    conjunto->tamanho = 0;
+    conjunto->capacidade = 0;
+}
+
+int main() {
+    
+    ConjuntoInteiros conjuntoA = criarConjunto(5);
+    inserir(&conjuntoA, 1);
+    inserir(&conjuntoA, 2);
+    inserir(&conjuntoA, 3);
+
+    ConjuntoInteiros conjuntoB = criarConjunto(5);
+    inserir(&conjuntoB, 3);
+    inserir(&conjuntoB, 4);
+    inserir(&conjuntoB, 5);
+
+    printf("Conjunto A: ");
+    imprimir(conjuntoA);
+
+    printf("Conjunto B: ");
+    imprimir(conjuntoB);
+
+    
+    ConjuntoInteiros uniao = criarConjunto(10);
+    for (int i = 0; i < conjuntoA.tamanho; i++) {
+        inserir(&uniao, conjuntoA.elementos[i]);
+    }
+    for (int i = 0; i < conjuntoB.tamanho; i++) {
+        inserir(&uniao, conjuntoB.elementos[i]);
+    }
+
+    printf("União de A e B: ");
+    imprimir(uniao);
+
+    
+    ConjuntoInteiros intersecao = criarConjunto(5);
+    for (int i = 0; i < conjuntoA.tamanho; i++) {
+        if (pertence(conjuntoB, conjuntoA.elementos[i])) {
+            inserir(&intersecao, conjuntoA.elementos[i]);
+        }
+    }
+
+    printf("Interseção de A e B: ");
+    imprimir(intersecao);
+
+    
+    liberarConjunto(&conjuntoA);
+    liberarConjunto(&conjuntoB);
+    liberarConjunto(&uniao);
+    liberarConjunto(&intersecao);
+
+    return 0;
+}
